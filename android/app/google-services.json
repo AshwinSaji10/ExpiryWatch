@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "58931858564",
+    "project_id": "expirydatetracker-712ac",
+    "storage_bucket": "expirydatetracker-712ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58931858564:android:e4c6b66e47249d778706d1",
+        "android_client_info": {
+          "package_name": "com.example.expiry_date_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMqgBFPA4YY_yoQWBbaIFaVxMPmcxFHyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
