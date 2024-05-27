@@ -9,12 +9,14 @@ class ExpiryData {
   static ExpiryData fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     return ExpiryData(
-        itemName: snapshot['itemname'], expiryDate: snapshot['expirydate']);
+        itemName: snapshot['itemname'] as String?,
+        expiryDate: (snapshot['expirydate'] as Timestamp?)?.toDate());
   }
-  Map<String,dynamic> toJson(){
-    return{
-    "itemname":itemName,
-    "expirydate":expiryDate,
+
+  Map<String, dynamic> toJson() {
+    return {
+      "itemname": itemName,
+      "expirydate": expiryDate,
     };
   }
 }
