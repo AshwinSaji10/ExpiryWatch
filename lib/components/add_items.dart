@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 // import 'package:expiry_date_tracker/providers/firebase_auth_provider.dart';
 // import 'package:expiry_date_tracker/components/login_page.dart';
 import "package:firebase_auth/firebase_auth.dart";
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
-final formatter = DateFormat.yMd();
+final formatter = DateFormat("dd-MM-yyyy");
 
 class AddItems extends StatefulWidget {
   const AddItems({super.key});
@@ -65,20 +66,57 @@ class _AddItemsState extends State<AddItems> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: SingleChildScrollView(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Add a new item"),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+        ),
+        body: Container(
           padding: const EdgeInsets.only(top: 40.0, left: 10, right: 10),
+          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+          decoration: BoxDecoration(
+              color: const Color.fromARGB(118, 68, 137, 255),
+              borderRadius: BorderRadius.circular(10)),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              TextField(
-                maxLength: 50,
-                controller: _itemNameController,
-                decoration: const InputDecoration(
-                    label: Text("Enter item name"),
-                    border: OutlineInputBorder()),
+              Column(
+                children: [
+                  
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Enter the name of the item"),
+                    ],
+                  ),
+                  TextField(
+                    maxLength: 50,
+                    controller: _itemNameController,
+                    decoration: InputDecoration(
+                      hintText: "Eg: Laptop warranty",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.blue[50],
+                    ),
+                  ),
+                ],
               ),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Select the item expiry date"),
+                    ],
+                  ),
                   // Row(
                   //   children: [
                   //     Text(_selectedStartDate == null
@@ -90,20 +128,61 @@ class _AddItemsState extends State<AddItems> {
                   //   ],
                   // ),
                   // const SizedBox(width: 50),
-                  Row(
-                    children: [
-                      Text(_selectedEndDate == null
-                          ? "Select the Expiry Date"
-                          : formatter.format(_selectedEndDate!)),
-                      IconButton(
-                          onPressed: () => datePicker("end"),
-                          icon: const Icon(Icons.calendar_month))
-                    ],
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(_selectedEndDate == null
+                            ? "No Date Selected"
+                            : formatter.format(_selectedEndDate!)),
+                        IconButton(
+                            onPressed: () => datePicker("end"),
+                            icon: const Icon(Icons.calendar_month))
+                      ],
+                    ),
                   )
                 ],
               ),
-              ElevatedButton(onPressed: addItem, child: const Text("Add Item")),
-              ElevatedButton(onPressed: () {}, child: const Text("Reset"))
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: addItem,
+                    child: Container(
+                      width: 150,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(147, 68, 137, 255),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Center(child: Text("Add Item")),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedEndDate=null;
+                      _itemNameController.text="";
+                      });
+                    },
+                    child: Container(
+                      width: 150,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(147, 68, 137, 255),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Center(child: Text("Reset")),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -111,4 +190,3 @@ class _AddItemsState extends State<AddItems> {
     );
   }
 }
-

@@ -21,6 +21,10 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
+  void navigateToLogin(){
+    Navigator.pop(context);
+  }
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -75,7 +79,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     child: const Center(child: Text("Register")),
                   ),
-                )
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Already have an account?"),
+                    TextButton(onPressed: navigateToLogin, child: const Text("Login")),
+                  ],
+                ),
               ],
             ),
           ),

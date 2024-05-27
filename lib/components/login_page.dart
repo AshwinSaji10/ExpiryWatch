@@ -1,5 +1,5 @@
 // import 'package:flutter/cupertino.dart';
-import 'dart:ui';
+// import 'dart:ui';
 
 import 'package:expiry_date_tracker/components/register_user.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +8,8 @@ import 'package:expiry_date_tracker/widgets/form_container_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expiry_date_tracker/components/home_page.dart';
 import 'package:expiry_date_tracker/providers/firebase_auth_provider.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+// import 'package:flutter/rendering.dart';
+// import 'package:flutter/widgets.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
