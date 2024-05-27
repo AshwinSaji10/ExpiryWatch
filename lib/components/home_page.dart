@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expiry_date_tracker/components/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:expiry_date_tracker/components/add_items.dart';
+import 'package:flutter/widgets.dart';
+import 'package:expiry_date_tracker/models/expiry_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,7 +14,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void addButton() {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  void addButton() async {
+    final User? user = auth.currentUser;
+    final uid = user?.uid;
+    final itemCollection = FirebaseFirestore.instance.collection(uid!);
+    print(uid);
+
+    QuerySnapshot querySnapshot = await itemCollection.get();
+    List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+    // for (var doc in documents) {
+    //   print(doc.data());
+    // }
     setState(() {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const AddItems()));
@@ -26,7 +42,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             const SizedBox(height: 30),
             Container(
-              margin: const EdgeInsets.only(right: 30,left:60),
+              margin: const EdgeInsets.only(right: 30, left: 60),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -51,11 +67,40 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Column(
-              children: [
-                ElevatedButton(onPressed: () {}, child: const Text("Hello")),
-              ],
-            ),
+            // Text(uid),
+            StreamBuilder<List<ExpiryData>>(
+              stream: _readData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.data == null) {
+                  return const Center(child: Text("No items yet"));
+                }
+                final items = snapshot.data;
+                return Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: items!.map((item) {
+                      // return Container(
+                      //   margin: const EdgeInsets.symmetric(
+                      //       horizontal: 10, vertical: 10),
+                      //   decoration: const BoxDecoration(
+                      //       color: Color.fromARGB(127, 68, 137, 255),
+                      //       borderRadius: BorderRadius.all(Radius.circular(10))),
+                      return ListTile(
+                        trailing: GestureDetector(
+                            child: const Icon(Icons.arrow_forward_ios)),
+                        title: Text(item.itemName!),
+                        subtitle: Text(item.expiryDate!.toString()),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
+            )
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -63,5 +108,19 @@ class _HomePageState extends State<HomePage> {
             child: const Text("+", style: TextStyle(fontSize: 20))),
       ),
     );
+  }
+
+  Stream<List<ExpiryData>> _readData() {
+    final User? user = auth.currentUser;
+    final uid = user?.uid;
+
+    final itemCollection = FirebaseFirestore.instance.collection(uid!);
+    // print(itemCollection);
+
+    return itemCollection.snapshots().map((querySnapshot) => querySnapshot.docs
+        .map(
+          (item) => ExpiryData.fromSnapshot(item),
+        )
+        .toList());
   }
 }

@@ -1,4 +1,10 @@
+// import 'dart:html';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter/widgets.dart';
+// import 'package:expiry_date_tracker/providers/firebase_auth_provider.dart';
+// import 'package:expiry_date_tracker/components/login_page.dart';
+import "package:firebase_auth/firebase_auth.dart";
 import 'package:intl/intl.dart';
 
 final formatter = DateFormat.yMd();
@@ -11,6 +17,16 @@ class AddItems extends StatefulWidget {
 
 class _AddItemsState extends State<AddItems> {
   // DateTime? _selectedStartDate = null;
+
+  TextEditingController _itemNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _itemNameController.dispose();
+
+    super.dispose();
+  }
+
   DateTime? _selectedEndDate = null;
   void datePicker(String time) async {
     final now = DateTime.now();
@@ -25,9 +41,23 @@ class _AddItemsState extends State<AddItems> {
       // if (time == "start") {
       //   _selectedStartDate = pickedDate;
       // } else {
-        _selectedEndDate = pickedDate;
+      _selectedEndDate = pickedDate;
       // }
     });
+  }
+
+  void addItem() async {
+    final firestore = FirebaseFirestore.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final uid = user?.uid;
+
+    await firestore.collection(uid!).doc(_itemNameController.text).set(
+      {
+        "itemname": _itemNameController.text,
+        "expirydate": _selectedEndDate,
+      },
+    );
   }
 
   @override
@@ -39,9 +69,10 @@ class _AddItemsState extends State<AddItems> {
           padding: const EdgeInsets.only(top: 40.0, left: 10, right: 10),
           child: Column(
             children: [
-              const TextField(
+              TextField(
                 maxLength: 50,
-                decoration: InputDecoration(
+                controller: _itemNameController,
+                decoration: const InputDecoration(
                     label: Text("Enter item name"),
                     border: OutlineInputBorder()),
               ),
@@ -71,8 +102,8 @@ class _AddItemsState extends State<AddItems> {
                   )
                 ],
               ),
-              ElevatedButton(onPressed: (){}, child: const Text("Add Item")),
-              ElevatedButton(onPressed: (){}, child: const Text("Reset"))
+              ElevatedButton(onPressed: addItem, child: const Text("Add Item")),
+              ElevatedButton(onPressed: () {}, child: const Text("Reset"))
             ],
           ),
         ),
@@ -80,3 +111,4 @@ class _AddItemsState extends State<AddItems> {
     );
   }
 }
+
