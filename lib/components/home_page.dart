@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:expiry_date_tracker/components/add_items.dart';
 // import 'package:flutter/widgets.dart';
 import 'package:expiry_date_tracker/models/expiry_data.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -82,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                       child: CircularProgressIndicator(),
                     );
                   }
-                  if (snapshot.data == null) {
+                  if ((snapshot.data!).isEmpty) {
                     return const Center(child: Text("No items yet"));
                   }
                   final items = snapshot.data;
@@ -107,8 +108,19 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () {
                                   final User? user = auth.currentUser;
                                   final uid = user?.uid;
-                                  final itemCollection=FirebaseFirestore.instance.collection(uid!);
+                                  final itemCollection = FirebaseFirestore
+                                      .instance
+                                      .collection(uid!);
                                   itemCollection.doc(item.itemName!).delete();
+                                  Fluttertoast.showToast(
+                                      msg: "Item deleted",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor:
+                                          const Color.fromARGB(255, 231, 18, 7),
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
                                 },
                                 icon: const Icon(Icons.delete),
                               ),

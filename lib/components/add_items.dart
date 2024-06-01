@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import "package:firebase_auth/firebase_auth.dart";
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:expiry_date_tracker/providers/notification_provider.dart';
 
 final formatter = DateFormat("dd-MM-yyyy");
 
@@ -53,12 +55,42 @@ class _AddItemsState extends State<AddItems> {
     final User? user = auth.currentUser;
     final uid = user?.uid;
 
-    await firestore.collection(uid!).doc(_itemNameController.text).set(
-      {
-        "itemname": _itemNameController.text,
-        "expirydate": _selectedEndDate,
-      },
-    );
+    if (_itemNameController.text.isNotEmpty && _selectedEndDate != null) {
+      await firestore.collection(uid!).doc(_itemNameController.text).set(
+        {
+          "itemname": _itemNameController.text,
+          "expirydate": _selectedEndDate,
+        },
+      );
+      final NotificationProvider notificationProvider = NotificationProvider();
+      notificationProvider.scheduleNotification(
+        'Expiry Reminder',
+        '${_itemNameController.text} is expiring soon!',
+        _selectedEndDate!,
+      );
+      // notificationProvider.checkPendingNotificationRequests();
+      Fluttertoast.showToast(
+          msg: "Item added",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Color.fromARGB(255, 48, 231, 7),
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text("Please fill all fields")),
+      // );
+      Fluttertoast.showToast(
+          msg: "Empty fields!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+    // Navigator.pop(context);
   }
 
   @override
@@ -86,11 +118,13 @@ class _AddItemsState extends State<AddItems> {
             children: [
               Column(
                 children: [
-                  
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Enter the name of the item"),
+                      Container( 
+                        margin: const EdgeInsets.only(left:5),
+                        child:
+                      const Text("Enter the item name")),
                     ],
                   ),
                   TextField(
@@ -99,8 +133,8 @@ class _AddItemsState extends State<AddItems> {
                     decoration: InputDecoration(
                       hintText: "Eg: Laptop warranty",
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
                       ),
                       filled: true,
                       fillColor: Colors.blue[50],
@@ -111,10 +145,13 @@ class _AddItemsState extends State<AddItems> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Row(
+                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Select the item expiry date"),
+                      Container( 
+                        margin: const EdgeInsets.only(left:5),
+                        child:
+                      const Text("Select the item expiry date")),
                     ],
                   ),
                   // Row(
@@ -136,9 +173,12 @@ class _AddItemsState extends State<AddItems> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(_selectedEndDate == null
+                        Container( 
+                          margin: const EdgeInsets.only(left:10),
+                          child:
+                          Text(_selectedEndDate == null
                             ? "No Date Selected"
-                            : formatter.format(_selectedEndDate!)),
+                            : formatter.format(_selectedEndDate!))),
                         IconButton(
                             onPressed: () => datePicker("end"),
                             icon: const Icon(Icons.calendar_month))
@@ -147,6 +187,9 @@ class _AddItemsState extends State<AddItems> {
                   )
                 ],
               ),
+              Center( 
+                child:
+                const Text("Note: Expiry reminders are sent 5 days before the selected date at 12 noon")),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -167,8 +210,8 @@ class _AddItemsState extends State<AddItems> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        _selectedEndDate=null;
-                      _itemNameController.text="";
+                        _selectedEndDate = null;
+                        _itemNameController.text = "";
                       });
                     },
                     child: Container(
