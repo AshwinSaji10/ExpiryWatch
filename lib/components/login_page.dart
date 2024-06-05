@@ -18,13 +18,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final FirebaseAuthService _auth = FirebaseAuthService();
 
-  bool _isSigning=false;
+  bool _isSigning = false;
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -34,63 +33,67 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-
-
-  void navigateToRegister(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>const RegisterPage()));
-
+  void navigateToRegister() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const RegisterPage()));
   }
 
   @override
   Widget build(context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text("ExpiryWatch Login"),
-          backgroundColor: Colors.blueAccent,
-        ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              children: [
-                const SizedBox(height: 30),
-                FormContainerWidget(
-                  hintText: "Email",
-                  controller: _emailController,
-                  isPasswordField: false,
-                ),
-                const SizedBox(height: 20),
-                FormContainerWidget(
-                  hintText: "Password",
-                  controller: _passwordController,
-                  isPasswordField: true,
-                ),
-                const SizedBox(height: 30),
-                GestureDetector(
-                  onTap: _signIn,
-                  child: Container(
-                    width: double.infinity,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(child:_isSigning? const CircularProgressIndicator(color:Colors.white): const Text("Login")),
+    final theme=Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text("ExpiryWatch Login"),
+        backgroundColor: theme.colorScheme.primary,
+      ),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              FormContainerWidget(
+                hintText: "Email",
+                controller: _emailController,
+                isPasswordField: false,
+              ),
+              const SizedBox(height: 20),
+              FormContainerWidget(
+                hintText: "Password",
+                controller: _passwordController,
+                isPasswordField: true,
+              ),
+              const SizedBox(height: 30),
+              GestureDetector(
+                onTap: _signIn,
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  child: Center(
+                      child: _isSigning
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text("Login")),
                 ),
-                const SizedBox(height: 5,),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   const Text("Dont have an account?"),
-                  TextButton(onPressed: navigateToRegister, child: const Text("Register")),
-                ],)
-              ],
-            ),
+                  TextButton(
+                      onPressed: navigateToRegister,
+                      child: const Text("Register")),
+                ],
+              )
+            ],
           ),
         ),
       ),
@@ -98,11 +101,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _signIn() async {
-
     setState(() {
-      _isSigning=true;
+      _isSigning = true;
     });
-    
 
     String email = _emailController.text;
     String password = _passwordController.text;
@@ -110,9 +111,8 @@ class _LoginPageState extends State<LoginPage> {
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
     setState(() {
-       _isSigning=false;
+      _isSigning = false;
     });
-   
 
     if (user != null) {
       print("User Signed In");
@@ -127,7 +127,6 @@ class _LoginPageState extends State<LoginPage> {
       // setState(() {
       //   const SnackBar(content: Text("Invalid credentials!",style: TextStyle(color: Colors.red),),);
       // });
-      
     }
   }
 }

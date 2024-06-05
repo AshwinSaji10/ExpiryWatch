@@ -63,12 +63,12 @@ class NotificationProvider {
   //   );
 
   Future<void> scheduleNotification(
-      String title, String body, DateTime scheduledDate) async {
+      int uid,String title, String body, DateTime scheduledDate) async {
     // final timeZoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation("Asia/Kolkata"));
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(//zoned schedule method to schedule a notification
-      0,
+      uid,
       title,
       body,
       _nextInstance(scheduledDate),
@@ -95,7 +95,7 @@ class NotificationProvider {
 
     /*>>>>>>>>>>>>>>show notification after 5 seconds<<<<<<<<<<<<<*/
     // await _flutterLocalNotificationsPlugin.zonedSchedule(
-    //     0,
+    //     uid,
     //     title,
     //     body,
     //     tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
@@ -147,5 +147,9 @@ class NotificationProvider {
           scheduledNotificationDate.add(const Duration(days: 1));
     }
     return scheduledNotificationDate;
+  }
+
+  Future<void> cancelNotification(int uid) async {
+    await _flutterLocalNotificationsPlugin.cancel(uid);
   }
 }
