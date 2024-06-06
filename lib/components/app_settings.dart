@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,27 +33,36 @@ class _AppSettingsState extends State<AppSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar( 
+        title:const Text("Settings"),
+        centerTitle: true,
+        leading: IconButton( 
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: (){Navigator.pop(context);} ,
+        ),
+
+      ),
       body: Center(
         child: Column(
           children: [
-            const SizedBox(height: 30),
-            Container(
-              margin: const EdgeInsets.only(left: 60, right: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Settings",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.arrow_back_ios))
-                ],
-              ),
-            ),
+            // const SizedBox(height: 30),
+            // Container(
+            //   margin: const EdgeInsets.only(left: 60, right: 30),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       const Text(
+            //         "Settings",
+            //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            //       ),
+            //       IconButton(
+            //           onPressed: () {
+            //             Navigator.pop(context);
+            //           },
+            //           icon: const Icon(Icons.arrow_back_ios))
+            //     ],
+            //   ),
+            // ),
             const SizedBox(height: 30),
             Container(
               width: double.infinity,

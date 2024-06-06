@@ -10,7 +10,7 @@ import 'package:expiry_date_tracker/components/add_items.dart';
 import 'package:expiry_date_tracker/models/expiry_data.dart';
 import 'package:expiry_date_tracker/components/app_settings.dart';
 import 'package:expiry_date_tracker/components/login_page.dart';
-// import 'package:expiry_date_tracker/components/update_item.dart';
+import 'package:expiry_date_tracker/components/update_item.dart';
 import 'package:expiry_date_tracker/providers/notification_provider.dart';
 
 // import 'package:intl/intl.dart';
@@ -155,17 +155,22 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             IconButton(
                               onPressed: () {
+
+                                //delete the item
                                 final User? user = auth.currentUser;
                                 final uid = user?.uid;
                                 final itemCollection =
                                     FirebaseFirestore.instance.collection(uid!);
-                                itemCollection.doc(item.itemName!).delete();
+                                itemCollection.doc("${item.uuid}").delete();
 
+                                //cancel notification for deleted item
                                 final NotificationProvider
                                     notificationProvider =
                                     NotificationProvider();
                                 notificationProvider
                                     .cancelNotification(item.uuid!);
+
+                                //show deleted
                                 Fluttertoast.showToast(
                                     msg: "Item deleted",
                                     toastLength: Toast.LENGTH_SHORT,
@@ -181,12 +186,12 @@ class _HomePageState extends State<HomePage> {
                             GestureDetector(
                               child: const Icon(Icons.arrow_forward_ios),
                               onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   CupertinoPageRoute(
-                                //     builder: ((context) => const UpdateItem()),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: ((context) => UpdateItem(item:item)),
+                                  ),
+                                );
                               },
                             ),
                           ],
@@ -207,9 +212,9 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: theme.colorScheme.primary,
         onPressed: addButton,
-        child: const Text(
+        child: Text(
           "+",
-          style: TextStyle(fontSize: 20),
+          style: theme.textTheme.bodyLarge,
         ),
       ),
     );

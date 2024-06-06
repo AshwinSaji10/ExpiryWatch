@@ -63,7 +63,7 @@ class _AddItemsState extends State<AddItems> {
     int uniqueId = uuid.v4().hashCode;
 
     if (_itemNameController.text.isNotEmpty && _selectedEndDate != null) {
-      await firestore.collection(uid!).doc(_itemNameController.text).set(
+      await firestore.collection(uid!).doc("$uniqueId").set(
         {
           "uuid": uniqueId,
           "itemname": _itemNameController.text,
@@ -105,6 +105,7 @@ class _AddItemsState extends State<AddItems> {
   @override
   Widget build(context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -140,9 +141,10 @@ class _AddItemsState extends State<AddItems> {
                 TextField(
                   maxLength: 50,
                   controller: _itemNameController,
-                  style: const TextStyle(color: Colors.black),
+                  style: theme.textTheme.bodyLarge,
                   decoration: InputDecoration(
                       hintText: "Eg: Laptop warranty",
+                      hintStyle: theme.textTheme.bodyLarge,
                       // hintStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -167,17 +169,6 @@ class _AddItemsState extends State<AddItems> {
                     ),
                   ],
                 ),
-                // Row(
-                //   children: [
-                //     Text(_selectedStartDate == null
-                //         ? "Start Date"
-                //         : formatter.format(_selectedStartDate!)),
-                //     IconButton(
-                //         onPressed: () => datePicker("start"),
-                //         icon: const Icon(Icons.calendar_month))
-                //   ],
-                // ),
-                // const SizedBox(width: 50),
                 GestureDetector(
                   onTap: () => datePicker(),
                   child: Container(
@@ -196,7 +187,7 @@ class _AddItemsState extends State<AddItems> {
                             _selectedEndDate == null
                                 ? "No Date Selected"
                                 : formatter.format(_selectedEndDate!),
-                            // style: const TextStyle(color: Colors.black),
+                            style: theme.textTheme.bodyLarge,
                           ),
                         ),
                         Container(
