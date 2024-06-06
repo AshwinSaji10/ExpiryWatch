@@ -1,3 +1,3 @@
-# expiry_date_tracker
+# ExpiryWatch
 
-A new Flutter project.
+An open source expiry date tracker and notifier
