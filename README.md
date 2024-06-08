@@ -8,6 +8,7 @@ An open source expiry date tracker and notifier
 <img src="https://github.com/AshwinSaji10/ExpiryWatch/assets/118591685/01fa4a9e-ca7c-4969-bab7-26323cde816a" width="200">
 <img src="https://github.com/AshwinSaji10/ExpiryWatch/assets/118591685/ef35530d-f6fa-4c32-a4f0-b9b375f516f7" width="200">
 <img src="https://github.com/AshwinSaji10/ExpiryWatch/assets/118591685/bba040ee-7508-4bad-aa92-7b2c9767299e" width="200">
+<img src="https://github.com/AshwinSaji10/ExpiryWatch/assets/118591685/647712ba-6759-4806-b1a4-46e0db3d7b81" width="200">
 <img src="https://github.com/AshwinSaji10/ExpiryWatch/assets/118591685/ed3db465-3302-47f7-9fb2-7404fd3cc50c" width="200">
 <img src="https://github.com/AshwinSaji10/ExpiryWatch/assets/118591685/794ba6aa-69cd-47a1-84e0-2eaf2915ac7f" width="200">
 
