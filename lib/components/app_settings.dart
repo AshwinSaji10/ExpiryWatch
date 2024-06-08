@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import 'package:expiry_date_tracker/controllers/theme_controller.dart';
 // import 'package:flutter/widgets.dart';
 
 class AppSettings extends StatefulWidget {
@@ -12,32 +14,36 @@ class AppSettings extends StatefulWidget {
 }
 
 class _AppSettingsState extends State<AppSettings> {
-  bool darkMode = false;
+  // bool darkMode = false;
 
-  _AppSettingsState() {
-    _loadDarkModeSetting();
-  }
+  // _AppSettingsState() {
+  //   _loadDarkModeSetting();
+  // }
 
-  _loadDarkModeSetting() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      darkMode = (prefs.getBool('darkMode') ?? false);
-    });
-  }
+  // _loadDarkModeSetting() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     darkMode = (prefs.getBool('darkMode') ?? false);
+  //   });
+  // }
 
-  _saveDarkModeSetting(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('darkMode', value);
-  }
+  // _saveDarkModeSetting(bool value) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool('darkMode', value);
+  //   // Get.changeThemeMode(value? ThemeMode.dark:ThemeMode.light);
+  // }
 
   @override
   Widget build(BuildContext context) {
+
+    final ThemeController themeController = Get.find();
+    
     return Scaffold(
       appBar: AppBar( 
         title:const Text("Settings"),
         centerTitle: true,
         leading: IconButton( 
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: (){Navigator.pop(context);} ,
         ),
 
@@ -67,21 +73,19 @@ class _AppSettingsState extends State<AppSettings> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: ListTile(
-                leading: darkMode
-                    ? const Icon(Icons.dark_mode)
-                    : const Icon(Icons.light_mode),
-                trailing: Switch(
-                    value: darkMode,
+              child: Obx(
+                () => ListTile(
+                  leading: themeController.isDarkMode.value
+                      ? const Icon(Icons.dark_mode)
+                      : const Icon(Icons.light_mode),
+                  trailing: Switch(
+                    value: themeController.isDarkMode.value,
                     onChanged: (value) {
-                      setState(
-                        () {
-                          darkMode = value;
-                          _saveDarkModeSetting(darkMode);
-                        },
-                      );
-                    }),
-                title: const Text("Dark mode (beta)"),
+                      themeController.toggleTheme(value);
+                    },
+                  ),
+                  title: const Text("Dark mode (beta)"),
+                ),
               ),
             )
           ],

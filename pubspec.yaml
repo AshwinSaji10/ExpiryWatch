@@ -24,12 +24,24 @@ dependencies:
   shared_preferences: ^2.2.3
   uuid: ^4.4.0
   percent_indicator: ^4.2.3
+  get: ^4.6.6
+  # flutter_launcher_icons: ^0.13.1
   # rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  # flutter_launcher_icons: ^0.13.1
+
+# flutter_launcher_icons:
+# android: "launcher_icon"
+# ios: true
+# image_path: "assets/icons/expiry_watch_icon.png"
+# git:
+#     url: https://github.com/Davenchy/flutter_launcher_icons.git
+#     ref: fixMinSdkParseFlutter2.8
+# min_sdk_android: 21
 
 flutter:
   uses-material-design: true

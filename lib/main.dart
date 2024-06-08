@@ -7,10 +7,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:get/get.dart';
 // import 'package:timezone/data/latest.dart' as tz;
 // import 'package:timezone/timezone.dart' as tz;
 import 'package:expiry_date_tracker/providers/notification_provider.dart';
 import 'package:expiry_date_tracker/theme/theme.dart';
+import 'package:expiry_date_tracker/controllers/theme_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +37,11 @@ void main() async {
   //       channelName: 'Basic notifications',
   //       channelDescription: "Product expiry notifications")
   // ]);
+
   NotificationProvider().initialize();
+
+  Get.put(ThemeController());//initialize get
+
   runApp(const MainApp());
 }
 
@@ -60,37 +66,15 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // theme: ThemeData(),
-      // darkTheme: ThemeData.dark(), // standard dark theme
-      // themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
-      // theme: ThemeData(
-      //   brightness: Brightness.light,
-      //   primaryColor: Colors.blue[200],
-      //   colorScheme: ColorScheme.fromSwatch().copyWith(
-      //     secondary: Colors.blue[50], 
-      //   ),
-      //   scaffoldBackgroundColor: Colors.white,
-      //   textTheme: const TextTheme(
-      //     bodyLarge: TextStyle(color: Colors.black),
-      //   ),
-      // ),
-      // darkTheme: ThemeData(
-      //   brightness: Brightness.dark,
-      //   primaryColor: const Color.fromARGB(184, 20, 81, 116),
-      //   colorScheme: ColorScheme.fromSwatch().copyWith(
-      //     secondary: Colors.blue[50], 
-      //   ),
-      //   scaffoldBackgroundColor: Colors.black,
-      //   textTheme: const TextTheme(
-      //     bodyLarge: TextStyle(color: Colors.white),
-      //   ),
-      // ),
-      theme: light,
-      darkTheme: dark,
-      themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
-      home: const AuthWrapper(),
+    final ThemeController themeController = Get.find();
+    return Obx(
+      () => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: light,
+        darkTheme: dark,
+        themeMode: themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+        home: const AuthWrapper(),
+      ),
     );
   }
 }
